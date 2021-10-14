@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COZMOSHOW</title>    
+    <style>
+        body{
+            color:steelblue;
+            background:black;
+            text-align:center;
+        }
+        .menuBtn{
+            border-radius:13px;
+            padding: 0.44em;
+            cursor: pointer;
+        }
+        .connected{
+            background: #6a6a6a;
+        }
+        .notConnected{
+            background: green;
+        }
+    </style>
+</head>
+<body>
+    <button id="loginBtn" class="menuBtn notConnected">CONNECT METAMASK</button>    
+</body>
+<script>
+    let mainView = null;
+    const loginButton = document.getElementById('loginBtn')
+    class MainViewClass {
+        constructor(account){
+            this.userAccount = account;
+        }
+    }
+    function initPage(){
+        if (!window.ethereum){
+            loginButton.innerText = "Get MetaMask";
+        } else { //if metamask exists, login.
+            loginButton.addEventListener('click',()=>{
+                if(mainView && mainView.userAccount){
+                    alert('connected');
+                    return;
+                }
+                ethereum.request({ method: 'eth_requestAccounts' })
+                .then((data)=>{
+                    mainView = new MainViewClass(data[0])
+                    loginButton.classList.add('connected')
+                    loginButton.classList.remove('notConnected')
+                    loginButton.innerText = "MetaMask Connected"
+                })
+                .catch((e)=>{ //user disconnected
+                    debugger;
+                })
+            })
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+        initPage();
+    })
+</script>
+</html>
